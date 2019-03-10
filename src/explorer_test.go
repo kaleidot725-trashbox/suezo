@@ -3,6 +3,9 @@ package main
 import "testing"
 
 func TestExploreFile(t *testing.T) {
+	var explorer = Explorer{}
+	var directory = "./test"
+	var noRecursive = false
 	var files []string = []string{
 		"test/test1.c",
 		"test/test2.cpp",
@@ -10,8 +13,10 @@ func TestExploreFile(t *testing.T) {
 		"test/test4.jpg",
 	}
 
-	var explorer = Explorer{}
-	var paths = explorer.ExploreFile("./test", false)
+	var paths, err = explorer.ExploreFile(directory, noRecursive)
+	if err != nil {
+		t.Error(err)
+	}
 
 	for _, item := range files {
 		bret := contains(item, paths)
@@ -26,6 +31,9 @@ func TestExploreFile(t *testing.T) {
 }
 
 func TestExploreFileRecursive(t *testing.T) {
+	var explorer = Explorer{}
+	var directory = "./test"
+	var recursive = true
 	var recursiveFiles = []string{
 		"test/test1.c",
 		"test/test2.cpp",
@@ -41,8 +49,10 @@ func TestExploreFileRecursive(t *testing.T) {
 		"test/dir1/dir2/test12.dat",
 	}
 
-	var explorer = Explorer{}
-	var paths = explorer.ExploreFile("./test", true)
+	var paths, err = explorer.ExploreFile(directory, recursive)
+	if err != nil {
+		t.Error(err)
+	}
 
 	for _, item := range recursiveFiles {
 		bret := contains(item, paths)
@@ -56,34 +66,53 @@ func TestExploreFileRecursive(t *testing.T) {
 	}
 }
 
+func TestExploreFileNotFoundDirectory(t *testing.T) {
+	var explorer = Explorer{}
+	var noDirectory = "./noDir"
+	var paths, err = explorer.ExploreFile(noDirectory, true)
+	if paths != nil && err == nil {
+		t.Error(err)
+	}
+}
+
 func TestExploreDirectory(t *testing.T) {
-	var directories = []string{
+	var explorer = Explorer{}
+	var directory = "./test"
+	var noRecursive = false
+	var expectedDirectories = []string{
 		"test/dir1",
 	}
 
-	var explorer = Explorer{}
-	var paths = explorer.ExploreDirectory("./test", false)
+	var paths, err = explorer.ExploreDirectory(directory, noRecursive)
+	if err != nil {
+		t.Error(err)
+	}
 
-	for _, item := range directories {
+	for _, item := range expectedDirectories {
 		bret := contains(item, paths)
 		if !bret {
 			t.Error("not found " + item)
 		}
 	}
 
-	if len(paths) != len(directories) {
+	if len(paths) != len(expectedDirectories) {
 		t.Error("count is not equal")
 	}
 }
 
 func TestExploreDirectoryRecursive(t *testing.T) {
+	var explorer = Explorer{}
+	var directory = "./test"
+	var recurisive = true
 	var recursiveDirectories = []string{
 		"test/dir1",
 		"test/dir1/dir2",
 	}
 
-	var explorer = Explorer{}
-	var paths = explorer.ExploreDirectory("./test", true)
+	var paths, err = explorer.ExploreDirectory(directory, recurisive)
+	if err != nil {
+		t.Error(err)
+	}
 
 	for _, item := range recursiveDirectories {
 		bret := contains(item, paths)
@@ -97,11 +126,11 @@ func TestExploreDirectoryRecursive(t *testing.T) {
 	}
 }
 
-func contains(str string, array []string) bool {
-	for _, item := range array {
-		if str == item {
-			return true
-		}
+func TestExploreDirecotryNotFoundDirectory(t *testing.T) {
+	var explorer = Explorer{}
+	var noDirectory = "./nodir"
+	var paths, err = explorer.ExploreDirectory(noDirectory, true)
+	if paths != nil && err == nil {
+		t.Error(err)
 	}
-	return false
 }
