@@ -56,6 +56,47 @@ func TestExploreFileRecursive(t *testing.T) {
 	}
 }
 
+func TestExploreDirectory(t *testing.T) {
+	var directories = []string{
+		"test/dir1",
+	}
+
+	var explorer = Explorer{}
+	var paths = explorer.ExploreDirectory("./test", false)
+
+	for _, item := range directories {
+		bret := contains(item, paths)
+		if !bret {
+			t.Error("not found " + item)
+		}
+	}
+
+	if len(paths) != len(directories) {
+		t.Error("count is not equal")
+	}
+}
+
+func TestExploreDirectoryRecursive(t *testing.T) {
+	var recursiveDirectories = []string{
+		"test/dir1",
+		"test/dir1/dir2",
+	}
+
+	var explorer = Explorer{}
+	var paths = explorer.ExploreDirectory("./test", true)
+
+	for _, item := range recursiveDirectories {
+		bret := contains(item, paths)
+		if !bret {
+			t.Error("not found " + item)
+		}
+	}
+
+	if len(paths) != len(recursiveDirectories) {
+		t.Error("count is not equal")
+	}
+}
+
 func contains(str string, array []string) bool {
 	for _, item := range array {
 		if str == item {
