@@ -4,9 +4,9 @@ import "testing"
 
 func TestOrganizeByExtension(t *testing.T) {
 	var explorer = Explorer{}
-	var organizer = Organizer{Explorer{}}
-	var source = "./test"
-	var destination = "./organized"
+	var organizer = Organizer{explorer}
+	var source = "../workspace"
+	var destination = "../organized"
 	var expectedPaths = []string{
 		"organized/c/test1.c",
 		"organized/cpp/test2.cpp",
@@ -14,7 +14,7 @@ func TestOrganizeByExtension(t *testing.T) {
 		"organized/jpg/test4.jpg",
 	}
 
-	err := organizer.OriganizeByExtension(source, destination, true)
+	err := organizer.OriganizeByExtension(source, destination)
 	if err != nil {
 		t.Error(err)
 		return
@@ -32,4 +32,32 @@ func TestOrganizeByExtension(t *testing.T) {
 			return
 		}
 	}
+}
+
+func TestOrganizeByExtensionNotFoundSource(t *testing.T) {
+	var organizer = Organizer{Explorer{}}
+	var noSource = "./noSource"
+	var destination = "./organized"
+
+	err := organizer.OriganizeByExtension(noSource, destination)
+	if err == nil {
+		t.Error(err)
+		return
+	}
+
+	println(err)
+}
+
+func TestOriganizeByExtensionNotFoundDestination(t *testing.T) {
+	var organizer = Organizer{Explorer{}}
+	var source = "./workspace"
+	var noDestination = "./noDestination"
+
+	err := organizer.OriganizeByExtension(source, noDestination)
+	if err == nil {
+		t.Error(err)
+		return
+	}
+
+	println(err)
 }

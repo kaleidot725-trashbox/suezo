@@ -4,13 +4,13 @@ import "testing"
 
 func TestExploreFile(t *testing.T) {
 	var explorer = Explorer{}
-	var directory = "./test"
+	var directory = "./workspace"
 	var noRecursive = false
 	var files []string = []string{
-		"test/test1.c",
-		"test/test2.cpp",
-		"test/test3.doc",
-		"test/test4.jpg",
+		"workspace/test1.c",
+		"workspace/test2.cpp",
+		"workspace/test3.doc",
+		"workspace/test4.jpg",
 	}
 
 	var paths, err = explorer.ExploreFile(directory, noRecursive)
@@ -32,21 +32,21 @@ func TestExploreFile(t *testing.T) {
 
 func TestExploreFileRecursive(t *testing.T) {
 	var explorer = Explorer{}
-	var directory = "./test"
+	var directory = "./workspace"
 	var recursive = true
 	var recursiveFiles = []string{
-		"test/test1.c",
-		"test/test2.cpp",
-		"test/test3.doc",
-		"test/test4.jpg",
-		"test/dir1/test5.wav",
-		"test/dir1/test6.txt",
-		"test/dir1/test7.mp3",
-		"test/dir1/test8.zip",
-		"test/dir1/dir2/test9.xls",
-		"test/dir1/dir2/test10.png",
-		"test/dir1/dir2/test11.log",
-		"test/dir1/dir2/test12.dat",
+		"workspace/test1.c",
+		"workspace/test2.cpp",
+		"workspace/test3.doc",
+		"workspace/test4.jpg",
+		"workspace/dir1/test5.wav",
+		"workspace/dir1/test6.txt",
+		"workspace/dir1/test7.mp3",
+		"workspace/dir1/test8.zip",
+		"workspace/dir1/dir2/test9.xls",
+		"workspace/dir1/dir2/test10.png",
+		"workspace/dir1/dir2/test11.log",
+		"workspace/dir1/dir2/test12.dat",
 	}
 
 	var paths, err = explorer.ExploreFile(directory, recursive)
@@ -77,10 +77,10 @@ func TestExploreFileNotFoundDirectory(t *testing.T) {
 
 func TestExploreDirectory(t *testing.T) {
 	var explorer = Explorer{}
-	var directory = "./test"
+	var directory = "./workspace"
 	var noRecursive = false
 	var expectedDirectories = []string{
-		"test/dir1",
+		"workspace/dir1",
 	}
 
 	var paths, err = explorer.ExploreDirectory(directory, noRecursive)
@@ -102,11 +102,11 @@ func TestExploreDirectory(t *testing.T) {
 
 func TestExploreDirectoryRecursive(t *testing.T) {
 	var explorer = Explorer{}
-	var directory = "./test"
+	var directory = "./workspace"
 	var recurisive = true
 	var recursiveDirectories = []string{
-		"test/dir1",
-		"test/dir1/dir2",
+		"workspace/dir1",
+		"workspace/dir1/dir2",
 	}
 
 	var paths, err = explorer.ExploreDirectory(directory, recurisive)
