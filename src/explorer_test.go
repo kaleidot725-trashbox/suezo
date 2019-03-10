@@ -4,10 +4,10 @@ import "testing"
 
 func TestExploreFile(t *testing.T) {
 	var files []string = []string{
-		"test/test1",
-		"test/test2",
-		"test/test3",
-		"test/test4",
+		"test/test1.c",
+		"test/test2.cpp",
+		"test/test3.doc",
+		"test/test4.jpg",
 	}
 
 	var explorer = Explorer{}
@@ -27,18 +27,18 @@ func TestExploreFile(t *testing.T) {
 
 func TestExploreFileRecursive(t *testing.T) {
 	var recursiveFiles = []string{
-		"test/test1",
-		"test/test2",
-		"test/test3",
-		"test/test4",
-		"test/dir1/test5",
-		"test/dir1/test6",
-		"test/dir1/test7",
-		"test/dir1/test8",
-		"test/dir1/dir2/test9",
-		"test/dir1/dir2/test10",
-		"test/dir1/dir2/test11",
-		"test/dir1/dir2/test12",
+		"test/test1.c",
+		"test/test2.cpp",
+		"test/test3.doc",
+		"test/test4.jpg",
+		"test/dir1/test5.wav",
+		"test/dir1/test6.txt",
+		"test/dir1/test7.mp3",
+		"test/dir1/test8.zip",
+		"test/dir1/dir2/test9.xls",
+		"test/dir1/dir2/test10.png",
+		"test/dir1/dir2/test11.log",
+		"test/dir1/dir2/test12.dat",
 	}
 
 	var explorer = Explorer{}
