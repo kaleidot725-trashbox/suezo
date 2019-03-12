@@ -12,7 +12,7 @@ type Organizer struct {
 }
 
 // OriganizeByExtension return err
-func (organizer Organizer) OriganizeByExtension(source string, destination string) (err error) {
+func (organizer Organizer) OriganizeByExtension(source string, destination string, deleteOption bool) (err error) {
 	var files, experr = organizer.explorer.ExploreFile(source, false)
 	if experr != nil {
 		return experr
@@ -28,10 +28,18 @@ func (organizer Organizer) OriganizeByExtension(source string, destination strin
 		oraganized := organizer.createOrganizedPath(item, destination)
 		err = organizer.copy(item, oraganized)
 		if err != nil {
-			break
+			return err
 		}
 	}
 
+	if deleteOption {
+		err = organizer.delete(destination)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = nil
 	return err
 }
 
@@ -53,6 +61,11 @@ func (organizer Organizer) copy(src string, dst string) (err error) {
 		return err
 	}
 
+	return err
+}
+
+func (organizer Organizer) delete(path string) (err error) {
+	err = os.Remove(path)
 	return err
 }
 
