@@ -52,7 +52,7 @@ func version() {
 
 func organize(source string, destination string, recursive bool, remove bool) {
 	organizer := Organizer{Explorer{}}
-	err := organizer.OriganizeByExtension(source, destination)
+	err := organizer.OriganizeByExtension(source, destination, false)
 	if err != nil {
 		println("organization failed!!(%s)", err)
 		return
