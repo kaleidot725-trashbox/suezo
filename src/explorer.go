@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 )
 
@@ -60,4 +61,24 @@ func (e Explorer) ExploreDirectory(dir string, recursive bool) (paths []string, 
 	}
 
 	return paths, nil
+}
+
+func (e Explorer) CopyFile(source string, destination string) (err error) {
+
+	return err
+}
+
+func (e Explorer) CopyDirectory(source string, destination string) (err error) {
+
+	return err
+}
+
+func (e Explorer) Delete(target string) (err error) {
+	return err
+}
+
+func (e Explorer) Exists(path string) (b bool) {
+	file, err := os.Open(path)
+	defer file.Close()
+	return err == nil
 }

@@ -1,19 +1,21 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestExploreFile(t *testing.T) {
-	var explorer = Explorer{}
-	var directory = "./workspace"
-	var noRecursive = false
-	var files []string = []string{
+	explorer := Explorer{}
+	directory := "./workspace"
+	noRecursive := false
+	files := []string{
 		"workspace/test1.c",
 		"workspace/test2.cpp",
 		"workspace/test3.doc",
 		"workspace/test4.jpg",
 	}
 
-	var paths, err = explorer.ExploreFile(directory, noRecursive)
+	paths, err := explorer.ExploreFile(directory, noRecursive)
 	if err != nil {
 		t.Error(err)
 	}
@@ -31,10 +33,10 @@ func TestExploreFile(t *testing.T) {
 }
 
 func TestExploreFileRecursive(t *testing.T) {
-	var explorer = Explorer{}
-	var directory = "./workspace"
-	var recursive = true
-	var recursiveFiles = []string{
+	explorer := Explorer{}
+	directory := "./workspace"
+	recursive := true
+	recursiveFiles := []string{
 		"workspace/test1.c",
 		"workspace/test2.cpp",
 		"workspace/test3.doc",
@@ -49,7 +51,7 @@ func TestExploreFileRecursive(t *testing.T) {
 		"workspace/dir1/dir2/test12.dat",
 	}
 
-	var paths, err = explorer.ExploreFile(directory, recursive)
+	paths, err := explorer.ExploreFile(directory, recursive)
 	if err != nil {
 		t.Error(err)
 	}
@@ -67,23 +69,23 @@ func TestExploreFileRecursive(t *testing.T) {
 }
 
 func TestExploreFileNotFoundDirectory(t *testing.T) {
-	var explorer = Explorer{}
-	var noDirectory = "./noDir"
-	var paths, err = explorer.ExploreFile(noDirectory, true)
+	explorer := Explorer{}
+	noDirectory := "./noDir"
+	paths, err := explorer.ExploreFile(noDirectory, true)
 	if paths != nil && err == nil {
 		t.Error(err)
 	}
 }
 
 func TestExploreDirectory(t *testing.T) {
-	var explorer = Explorer{}
-	var directory = "./workspace"
-	var noRecursive = false
-	var expectedDirectories = []string{
+	explorer := Explorer{}
+	directory := "./workspace"
+	noRecursive := false
+	expectedDirectories := []string{
 		"workspace/dir1",
 	}
 
-	var paths, err = explorer.ExploreDirectory(directory, noRecursive)
+	paths, err := explorer.ExploreDirectory(directory, noRecursive)
 	if err != nil {
 		t.Error(err)
 	}
@@ -101,15 +103,15 @@ func TestExploreDirectory(t *testing.T) {
 }
 
 func TestExploreDirectoryRecursive(t *testing.T) {
-	var explorer = Explorer{}
-	var directory = "./workspace"
-	var recurisive = true
-	var recursiveDirectories = []string{
+	explorer := Explorer{}
+	directory := "./workspace"
+	recurisive := true
+	recursiveDirectories := []string{
 		"workspace/dir1",
 		"workspace/dir1/dir2",
 	}
 
-	var paths, err = explorer.ExploreDirectory(directory, recurisive)
+	paths, err := explorer.ExploreDirectory(directory, recurisive)
 	if err != nil {
 		t.Error(err)
 	}
@@ -132,5 +134,78 @@ func TestExploreDirecotryNotFoundDirectory(t *testing.T) {
 	var paths, err = explorer.ExploreDirectory(noDirectory, true)
 	if paths != nil && err == nil {
 		t.Error(err)
+	}
+}
+
+func TestExploreExists(t *testing.T) {
+	explorer := Explorer{}
+	directory := "./workspace"
+	file := "./workspace/test1.c"
+
+	b := explorer.Exists(directory)
+	if !b {
+		t.Error("not found error")
+	}
+
+	b = explorer.Exists(file)
+	if !b {
+		t.Error("not found error")
+	}
+}
+sfunc TestExplorerExists_ない場合(t *testing.T) {
+	explorer := Explorer{}
+	noDirectory := "./nodir"
+	noFile := "./workspace/nofile.txt"
+
+	b := explorer.Exists(noDirectory)
+	if b {
+		t.Error("found error")
+	}
+
+	b = explorer.Exists(noFile)
+	if b {
+		t.Error("found error")
+	}
+}
+
+func TestCopyとDelete(t *testing.T) {
+	explorer := Explorer{}
+	source := "./workspace"
+	delete := "./delete"
+
+	files, err := explorer.ExploreFile(source, true)
+
+	err = explorer.Copy(source, delete)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	after, err := explorer.ExploreFile(delete, true)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	err = explorer.Delete(delete)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	before, err := explorer.ExploreFile(delete, true)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if len(files) != len(after) {
+		t.Error("copy failed")
+		return
+	}
+
+	if len(before) != 0 {
+		t.Error("delete failed")
+		return
 	}
 }

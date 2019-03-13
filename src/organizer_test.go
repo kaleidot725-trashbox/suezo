@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os/exec"
 	"testing"
 )
 
@@ -45,9 +44,9 @@ func TestOrganizeByExtention_削除オプション(t *testing.T) {
 	delete := "./delete"
 	destination := "./organized"
 
-	err := exec.Command("cp", source, delete, "-r").Run()
+	err := explorer.CopyDirectory(source, delete)
 	if err != nil {
-		t.Error("create deleting directory")
+		t.Error(err)
 		return
 	}
 
