@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io"
 	"os"
 	"path/filepath"
 )
@@ -12,28 +11,28 @@ type Organizer struct {
 }
 
 // OriganizeByExtension return err
-func (organizer Organizer) OriganizeByExtension(source string, destination string, deleteOption bool) (err error) {
-	var files, experr = organizer.explorer.ExploreFile(source, false)
+func (o Organizer) OriganizeByExtension(source string, destination string, deleteOption bool) (err error) {
+	var files, experr = o.explorer.ExploreFile(source, false)
 	if experr != nil {
 		return experr
 	}
 
-	var exts = organizer.createNoDuplicateExtArray(files)
+	var exts = o.createNoDuplicateExtArray(files)
 	for _, item := range exts {
 		var mkdirpath = filepath.Join(destination, item)
 		os.Mkdir(mkdirpath, 0777)
 	}
 
 	for _, item := range files {
-		oraganized := organizer.createOrganizedPath(item, destination)
-		err = organizer.copy(item, oraganized)
+		oraganized := o.createOrganizedPath(item, destination)
+		err = o.explorer.CopyFile(item, oraganized)
 		if err != nil {
 			return err
 		}
 	}
 
 	if deleteOption {
-		err = organizer.delete(destination)
+		err = o.explorer.Delete(destination)
 		if err != nil {
 			return err
 		}
@@ -43,33 +42,7 @@ func (organizer Organizer) OriganizeByExtension(source string, destination strin
 	return err
 }
 
-func (organizer Organizer) copy(src string, dst string) (err error) {
-	sourceFile, err := os.Open(src)
-	if err != nil {
-		return err
-	}
-	defer sourceFile.Close()
-
-	destinationFile, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-	defer destinationFile.Close()
-
-	_, err = io.Copy(destinationFile, sourceFile)
-	if err != nil {
-		return err
-	}
-
-	return err
-}
-
-func (organizer Organizer) delete(path string) (err error) {
-	err = os.Remove(path)
-	return err
-}
-
-func (organizer Organizer) createNoDuplicateExtArray(files []string) (exts []string) {
+func (o Organizer) createNoDuplicateExtArray(files []string) (exts []string) {
 	var m = make(map[string]bool)
 	for _, file := range files {
 		var ext = filepath.Ext(file)
@@ -82,7 +55,7 @@ func (organizer Organizer) createNoDuplicateExtArray(files []string) (exts []str
 	return exts
 }
 
-func (organizer Organizer) createOrganizedPath(src string, dst string) (oraganized string) {
+func (o Organizer) createOrganizedPath(src string, dst string) (oraganized string) {
 	ext := filepath.Ext(src)
 	_, file := filepath.Split(src)
 	oraganized = filepath.Join(dst, ext[1:len(ext)], file)

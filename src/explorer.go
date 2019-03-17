@@ -2,6 +2,8 @@ package main
 
 import (
 	"errors"
+	"github.com/otiai10/copy"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -64,16 +66,33 @@ func (e Explorer) ExploreDirectory(dir string, recursive bool) (paths []string, 
 }
 
 func (e Explorer) CopyFile(source string, destination string) (err error) {
+	sourceFile, err := os.Open(source)
+	if err != nil {
+		return err
+	}
+	defer sourceFile.Close()
+
+	destinationFile, err := os.Create(destination)
+	if err != nil {
+		return err
+	}
+	defer destinationFile.Close()
+
+	_, err = io.Copy(destinationFile, sourceFile)
+	if err != nil {
+		return err
+	}
 
 	return err
 }
 
 func (e Explorer) CopyDirectory(source string, destination string) (err error) {
-
+	err := Copy(source, destination)
 	return err
 }
 
 func (e Explorer) Delete(target string) (err error) {
+	err = os.Remove(target)
 	return err
 }
 

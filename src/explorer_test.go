@@ -152,10 +152,11 @@ func TestExploreExists(t *testing.T) {
 		t.Error("not found error")
 	}
 }
-sfunc TestExplorerExists_ない場合(t *testing.T) {
+
+func TestExplorerExists_ない場合(t *testing.T) {
 	explorer := Explorer{}
 	noDirectory := "./nodir"
-	noFile := "./workspace/nofile.txt"
+	noFile := "./nodir/nofile.txt"
 
 	b := explorer.Exists(noDirectory)
 	if b {
@@ -168,21 +169,19 @@ sfunc TestExplorerExists_ない場合(t *testing.T) {
 	}
 }
 
-func TestCopyとDelete(t *testing.T) {
+func TestCopyFileとDelete(t *testing.T) {
 	explorer := Explorer{}
-	source := "./workspace"
-	delete := "./delete"
+	source := "./workspace/test1.c"
+	delete := "./delete/test1.c"
 
-	files, err := explorer.ExploreFile(source, true)
-
-	err = explorer.Copy(source, delete)
+	err := explorer.CopyFile(source, delete)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	after, err := explorer.ExploreFile(delete, true)
-	if err != nil {
+	copyed := explorer.Exists(delete)
+	if !copyed {
 		t.Error(err)
 		return
 	}
@@ -193,19 +192,66 @@ func TestCopyとDelete(t *testing.T) {
 		return
 	}
 
-	before, err := explorer.ExploreFile(delete, true)
+	copyed = explorer.Exists(delete)
+	if copyed {
+		t.Error(err)
+		return
+	}
+}
+
+func TestCopyDirectoryとDelete(t *testing.T) {
+	explorer := Explorer{}
+	source := "./workspace/"
+	delete := "./delete"
+	deleteFiles := []string{
+		"delete/test1.c",
+		"delete/test2.cpp",
+		"delete/test3.doc",
+		"delete/test4.jpg",
+		"delete/dir1/test5.wav",
+		"delete/dir1/test6.txt",
+		"delete/dir1/test7.mp3",
+		"delete/dir1/test8.zip",
+		"delete/dir1/dir2/test9.xls",
+		"delete/dir1/dir2/test10.png",
+		"delete/dir1/dir2/test11.log",
+		"delete/dir1/dir2/test12.dat",
+	}
+
+	err := explorer.CopyDirectory(source, delete)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	if len(files) != len(after) {
-		t.Error("copy failed")
+	exists := explorer.Exists(delete)
+	if !exists {
+		t.Error("doesn't create directory")
 		return
 	}
 
-	if len(before) != 0 {
-		t.Error("delete failed")
+	existsFiles, err := explorer.ExploreFile(delete, true)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	for _, file := range existsFiles {
+		bret := contains(file, delete)
+		if !bret {
+			t.Error("doens't copy " + file)
+		}
+	}
+
+	err = explorer.Delete(delete)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	exists := explorer.Exists(delete)
+	if exists {
+		t.Error("doesn't delete directory")
 		return
 	}
 }
