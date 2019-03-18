@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"testing"
 )
 
@@ -174,29 +175,33 @@ func TestCopyFileとDelete(t *testing.T) {
 	source := "./workspace/test1.c"
 	delete := "./delete/test1.c"
 
-	err := explorer.CopyFile(source, delete)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	os.Mkdir("./delete", 0777)
+	{
+		err := explorer.CopyFile(source, delete)
+		if err != nil {
+			t.Error(err)
+			return
+		}
 
-	copyed := explorer.Exists(delete)
-	if !copyed {
-		t.Error(err)
-		return
-	}
+		copyed := explorer.Exists(delete)
+		if !copyed {
+			t.Error(err)
+			return
+		}
 
-	err = explorer.Delete(delete)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+		err = explorer.Delete(delete)
+		if err != nil {
+			t.Error(err)
+			return
+		}
 
-	copyed = explorer.Exists(delete)
-	if copyed {
-		t.Error(err)
-		return
+		copyed = explorer.Exists(delete)
+		if copyed {
+			t.Error(err)
+			return
+		}
 	}
+	explorer.Delete("./delete")
 }
 
 func TestCopyDirectoryとDelete(t *testing.T) {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"os"
 	"testing"
 )
 
@@ -17,24 +17,28 @@ func TestOrganizeByExtension(t *testing.T) {
 		"organized/jpg/test4.jpg",
 	}
 
-	err := organizer.OriganizeByExtension(source, destination, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-
-	actualPaths, err := explorer.ExploreFile(destination, true)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-
-	for _, item := range expectedPaths {
-		if !contains(item, actualPaths) {
-			t.Error("not found " + item)
+	os.Mkdir(destination, 0777)
+	{
+		err := organizer.OriganizeByExtension(source, destination, false)
+		if err != nil {
+			t.Error(err)
 			return
 		}
+
+		actualPaths, err := explorer.ExploreFile(destination, true)
+		if err != nil {
+			t.Error(err)
+			return
+		}
+
+		for _, item := range expectedPaths {
+			if !contains(item, actualPaths) {
+				t.Error("not found " + item)
+				return
+			}
+		}
 	}
+	explorer.Delete(destination)
 }
 
 func TestOrganizeByExtention_削除オプション(t *testing.T) {
@@ -44,35 +48,23 @@ func TestOrganizeByExtention_削除オプション(t *testing.T) {
 	delete := "./delete"
 	destination := "./organized"
 
-	err := explorer.CopyDirectory(source, delete)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	os.Mkdir(destination, 0777)
+	{
+		err := explorer.CopyDirectory(source, delete)
+		if err != nil {
+			t.Error(err)
+			return
+		}
 
-	beforeDeletionPaths, err := explorer.ExploreFile(delete, true)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+		err = organizer.OriganizeByExtension(delete, destination, true)
+		if err != nil {
+			t.Error(err)
+		}
 
-	err = organizer.OriganizeByExtension(source, destination, true)
-	if err != nil {
-		t.Error(err)
-	}
-
-	afterDeletionPaths, err := explorer.ExploreFile(delete, true)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-
-	for _, before := range beforeDeletionPaths {
-		for _, after := range afterDeletionPaths {
-			if before == after {
-				t.Error(fmt.Sprintf("doesn't delete %s", before))
-				return
-			}
+		bret := explorer.Exists(delete)
+		if bret {
+			t.Error(err)
+			return
 		}
 	}
 }

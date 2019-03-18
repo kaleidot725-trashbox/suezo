@@ -32,7 +32,7 @@ func (o Organizer) OriganizeByExtension(source string, destination string, delet
 	}
 
 	if deleteOption {
-		err = o.explorer.Delete(destination)
+		err = o.explorer.Delete(source)
 		if err != nil {
 			return err
 		}
