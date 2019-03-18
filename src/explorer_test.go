@@ -237,7 +237,7 @@ func TestCopyDirectoryとDelete(t *testing.T) {
 	}
 
 	for _, file := range existsFiles {
-		bret := contains(file, delete)
+		bret := contains(file, deleteFiles)
 		if !bret {
 			t.Error("doens't copy " + file)
 		}
@@ -249,7 +249,7 @@ func TestCopyDirectoryとDelete(t *testing.T) {
 		return
 	}
 
-	exists := explorer.Exists(delete)
+	exists = explorer.Exists(delete)
 	if exists {
 		t.Error("doesn't delete directory")
 		return

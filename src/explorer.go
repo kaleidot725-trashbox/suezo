@@ -87,12 +87,12 @@ func (e Explorer) CopyFile(source string, destination string) (err error) {
 }
 
 func (e Explorer) CopyDirectory(source string, destination string) (err error) {
-	err := Copy(source, destination)
+	err = copy.Copy(source, destination)
 	return err
 }
 
 func (e Explorer) Delete(target string) (err error) {
-	err = os.Remove(target)
+	err = os.RemoveAll(target)
 	return err
 }
 
