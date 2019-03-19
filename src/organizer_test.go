@@ -47,6 +47,12 @@ func TestOrganizeByExtention_削除オプション(t *testing.T) {
 	source := "./workspace"
 	delete := "./delete"
 	destination := "./organized"
+	var deletePaths = []string{
+		"delete/c/test1.c",
+		"delete/cpp/test2.cpp",
+		"delete/doc/test3.doc",
+		"delete/jpg/test4.jpg",
+	}
 
 	os.Mkdir(destination, 0777)
 	{
@@ -61,12 +67,20 @@ func TestOrganizeByExtention_削除オプション(t *testing.T) {
 			t.Error(err)
 		}
 
-		bret := explorer.Exists(delete)
-		if bret {
+		files, err := explorer.ExploreFile(delete, true)
+		if err != nil {
 			t.Error(err)
 			return
 		}
+
+		for _, item := range deletePaths {
+			if contains(item, files) {
+				t.Error("found " + item)
+				return
+			}
+		}
 	}
+	explorer.Delete(delete)
 }
 
 func TestOrganizeByExtensionNotFoundSource(t *testing.T) {

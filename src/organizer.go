@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -24,31 +25,39 @@ func (o Organizer) OriganizeByExtension(source string, destination string, delet
 	}
 
 	for _, item := range files {
-		oraganized := o.createOrganizedPath(item, destination)
-		err = o.explorer.CopyFile(item, oraganized)
+		organized := o.createOrganizedPath(item, destination)
+		err = o.explorer.CopyFile(item, organized)
 		if err != nil {
-			return err
+			fmt.Printf("copy %s %s\n", organized, err)
+			break
 		}
+
+		err = o.explorer.Delete(item)
+		if err != nil {
+			fmt.Printf("delete %s %s\n", item, err)
+			break
+		}
+
+		fmt.Printf("replace %s %s\n", item, organized)
 	}
 
-	if deleteOption {
-		err = o.explorer.Delete(source)
-		if err != nil {
-			return err
-		}
-	}
-
-	err = nil
+	// FIXME 適切なエラーを返す
 	return err
 }
 
 func (o Organizer) createNoDuplicateExtArray(files []string) (exts []string) {
 	var m = make(map[string]bool)
 	for _, file := range files {
-		var ext = filepath.Ext(file)
+		ext := filepath.Ext(file)
+		dirname := "none"
+		if 0 < len(ext) {
+			dirname = ext[1:len(ext)]
+		}
+
 		if !m[ext] {
 			m[ext] = true
-			exts = append(exts, ext[1:len(ext)])
+
+			exts = append(exts, dirname)
 		}
 	}
 
@@ -57,7 +66,12 @@ func (o Organizer) createNoDuplicateExtArray(files []string) (exts []string) {
 
 func (o Organizer) createOrganizedPath(src string, dst string) (oraganized string) {
 	ext := filepath.Ext(src)
+	dirname := "none"
+	if 0 < len(ext) {
+		dirname = ext[1:len(ext)]
+	}
+
 	_, file := filepath.Split(src)
-	oraganized = filepath.Join(dst, ext[1:len(ext)], file)
+	oraganized = filepath.Join(dst, dirname, file)
 	return oraganized
 }

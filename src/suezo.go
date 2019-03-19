@@ -2,20 +2,22 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 )
 
 func main() {
-	recursiveOption := flag.Bool("r", false, "help message for r option")
-	deleteOption := flag.Bool("d", false, "help message for d option")
-	helpOption := flag.Bool("h", false, "help message for h option")
-	versionOption := flag.Bool("v", false, "help message for v option")
+	source := flag.String("src", "./", "help message for src")
+	destination := flag.String("dst", "./", "help message for dst")
+	deleteOption := flag.Bool("delete", false, "help message for d option")
+	helpOption := flag.Bool("help", false, "help message for h option")
+	versionOption := flag.Bool("version", false, "help message for v option")
 	flag.Parse()
 
+	fmt.Printf("sss %t\n ", *deleteOption)
+
 	if 3 <= len(os.Args) {
-		source := os.Args[1]
-		destination := os.Args[2]
-		organize(source, destination, *recursiveOption, *deleteOption)
+		organize(*source, *destination, *deleteOption)
 		return
 	}
 
@@ -33,31 +35,30 @@ func main() {
 }
 
 func menu() {
-	println("Suezo is a tool for organizing file")
-	println()
-	println("Usage :")
-	println("     suezo <source> <destination> [options]")
-	println()
-	println("The options are")
-	println("     -r     organize recursively directories.")
-	println("     -d     delete source directories.")
-	println("     -h     display help message.")
-	println("     -v     display version message.")
-	println()
+	fmt.Println("suezo is a tool to forced stacks")
+	fmt.Println()
+	fmt.Println("Usage :")
+	fmt.Println("     suezo <source> <destination> [options]")
+	fmt.Println()
+	fmt.Println("The options are")
+	fmt.Println("     -d     delete source directories.")
+	fmt.Println("     -h     display help message.")
+	fmt.Println("     -v     display version message.")
+	fmt.Println()
 }
 
 func version() {
-	println("Suezo is v0.0.1")
+	fmt.Println("Suezo is v0.0.1")
 }
 
-func organize(source string, destination string, recursive bool, remove bool) {
+func organize(source string, destination string, remove bool) {
 	organizer := Organizer{Explorer{}}
-	err := organizer.OriganizeByExtension(source, destination, false)
+	err := organizer.OriganizeByExtension(source, destination, remove)
 	if err != nil {
-		println("organization failed!!(%s)", err)
+		fmt.Printf("organization failed!!(%s)", err)
 		return
 	}
 
-	println("organization success!!")
+	fmt.Println("organization success!!")
 	return
 }
