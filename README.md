@@ -10,4 +10,6 @@ The options are
      -help          display help message.
      -version     display versfion message.
 
-![suezo](https://image01.seesaawiki.jp/d/s/ddddcolors/e76cf6403eb7b307.png)
+
+
+![suezo](./demo.gif)
