@@ -14,9 +14,7 @@ func main() {
 	versionOption := flag.Bool("version", false, "help message for v option")
 	flag.Parse()
 
-	fmt.Printf("sss %t\n ", *deleteOption)
-
-	if 3 <= len(os.Args) {
+	if 5 <= len(os.Args) {
 		organize(*source, *destination, *deleteOption)
 		return
 	}
@@ -35,15 +33,15 @@ func main() {
 }
 
 func menu() {
-	fmt.Println("suezo is a tool to forced stacks")
+	fmt.Println("Suezo is a tool to forced stacks")
 	fmt.Println()
 	fmt.Println("Usage :")
-	fmt.Println("     suezo <source> <destination> [options]")
+	fmt.Println("     suezo -src <source> -dst <destination> [options]")
 	fmt.Println()
 	fmt.Println("The options are")
-	fmt.Println("     -d     delete source directories.")
-	fmt.Println("     -h     display help message.")
-	fmt.Println("     -v     display version message.")
+	fmt.Println("     -delete     delete source directories.")
+	fmt.Println("     -help     display help message.")
+	fmt.Println("     -version     display version message.")
 	fmt.Println()
 }
 
