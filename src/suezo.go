@@ -7,15 +7,15 @@ import (
 )
 
 func main() {
-	source := flag.String("src", "./", "help message for src")
-	destination := flag.String("dst", "./", "help message for dst")
+	from := flag.String("f", "./", "help message for from")
+	to := flag.String("t", "./", "help message for to")
 	deleteOption := flag.Bool("delete", false, "help message for d option")
-	helpOption := flag.Bool("help", false, "help message for h option")
-	versionOption := flag.Bool("version", false, "help message for v option")
+	helpOption := flag.Bool("h", false, "help message for h option")
+	versionOption := flag.Bool("v", false, "help message for v option")
 	flag.Parse()
 
 	if 5 <= len(os.Args) {
-		organize(*source, *destination, *deleteOption)
+		organize(*from, *to, *deleteOption)
 		return
 	}
 

@@ -2,11 +2,12 @@ package main
 
 import (
 	"errors"
-	"github.com/otiai10/copy"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/otiai10/copy"
 )
 
 // Explorer is

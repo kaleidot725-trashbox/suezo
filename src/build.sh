@@ -1,1 +1,0 @@
-go build suezo.go explorer.go organizer.go
