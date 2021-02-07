@@ -12,20 +12,20 @@ type Organizer struct {
 }
 
 // OriganizeByExtension return err
-func (o Organizer) OriganizeByExtension(source string, destination string, deleteOption bool) (err error) {
-	var files, experr = o.explorer.ExploreFile(source, false)
+func (o Organizer) OriganizeByExtension(from string, to string, deleteOption bool) (err error) {
+	var files, experr = o.explorer.ExploreFile(from, false)
 	if experr != nil {
 		return experr
 	}
 
 	var exts = o.createNoDuplicateExtArray(files)
 	for _, item := range exts {
-		var mkdirpath = filepath.Join(destination, item)
+		var mkdirpath = filepath.Join(to, item)
 		os.Mkdir(mkdirpath, 0777)
 	}
 
 	for _, item := range files {
-		organized := o.createOrganizedPath(item, destination)
+		organized := o.createOrganizedPath(item, to)
 		err = o.explorer.CopyFile(item, organized)
 		if err != nil {
 			fmt.Printf("copy %s %s\n", organized, err)
